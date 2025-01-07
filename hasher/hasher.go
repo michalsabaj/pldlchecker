@@ -13,11 +13,13 @@ func HashDane(firstName, lastName, driverLicenseNumber string) string {
 	//normalization
 	//fmt.Printf("Before normalization: '%s'\n", toHash)
 	toHash = normalizeInput(toHash)
-	//fmt.Printf("To hash: '%s'\n", toHash)
+	fmt.Printf("To hash: '%s'\n", toHash)
 	//hashing
 	normalized := NormalizeForHash(toHash)
 	hash := md5.Sum([]byte(normalized))
-	return strings.ToUpper(hex.EncodeToString(hash[:]))
+	formatedHash := strings.ToUpper(hex.EncodeToString(hash[:]))
+	//fmt.Printf("Hash: '%s'\n", formatedHash)
+	return formatedHash
 }
 
 func NormalizeForHash(t string) string {
