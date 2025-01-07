@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"strings"
 	"unicode"
+
+	"github.com/michalsabaj/pldlchecker/config"
 )
 
 func HashDane(firstName, lastName, driverLicenseNumber string) string {
@@ -13,12 +15,21 @@ func HashDane(firstName, lastName, driverLicenseNumber string) string {
 	//normalization
 	//fmt.Printf("Before normalization: '%s'\n", toHash)
 	toHash = normalizeInput(toHash)
-	fmt.Printf("To hash: '%s'\n", toHash)
+	cfg := config.GetConfig()
+	if !cfg.Debug {
+		fmt.Printf("[DEBUG] To hash: (before normalized) '%s'\n", toHash)
+	}
 	//hashing
 	normalized := NormalizeForHash(toHash)
+	if !cfg.Debug {
+		fmt.Printf("[DEBUG] To hash: (normalized) '%s'\n", normalized)
+	}
 	hash := md5.Sum([]byte(normalized))
 	formatedHash := strings.ToUpper(hex.EncodeToString(hash[:]))
-	//fmt.Printf("Hash: '%s'\n", formatedHash)
+	if !cfg.Debug {
+		fmt.Printf("[DEBUG] Hash: '%s'\n", formatedHash)
+
+	}
 	return formatedHash
 }
 

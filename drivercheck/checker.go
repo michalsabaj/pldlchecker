@@ -21,7 +21,11 @@ func IsDriverLicenseValid(firstName, lastName, driverLicenseNumber string) (bool
 		return false, fmt.Errorf("input exceeds character limit")
 	}
 	//hashing the input data
-	hash := hasher.HashDane(firstName, lastName, driverLicenseNumber)
+	hash, err := GetDriverLicenseHash(firstName, lastName, driverLicenseNumber)
+	if err != nil {
+		return false, fmt.Errorf("failed to hash input data: %w", err)
+	}
+
 	//sending the request and harvesting the response
 	res, err := handler.HandleRequest(cfg.APIAddress + hash)
 	if err != nil {
@@ -34,9 +38,16 @@ func IsDriverLicenseValid(firstName, lastName, driverLicenseNumber string) (bool
 	}
 	//checking if the driver's license is valid
 	isValid := data.DokumentPotwierdzajacyUprawnienia.StanDokumentu.StanDokumentu.Wartosc == "Wydany"
-	if isValid {
+
+	if isValid && cfg.Debug {
 		log.Printf("Driver's license status: %s", data.DokumentPotwierdzajacyUprawnienia.StanDokumentu)
 	}
-	fmt.Println("hi")
+	//TODO: Have to spend more time on verifying the response data in edge cases
 	return isValid, nil
+}
+
+func GetDriverLicenseHash(firstName, lastName, driverLicenseNumber string) (string, error) {
+	//hashing the input data
+	hash := hasher.HashDane(firstName, lastName, driverLicenseNumber)
+	return hash, nil
 }

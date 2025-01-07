@@ -17,7 +17,8 @@ func HandleRequest(url string) ([]byte, error) {
 	if err != nil {
 		return nil, fmt.Errorf("request failed: %w", err)
 	}
-	defer res.Body.Close() // Correct placement here
+
+	defer res.Body.Close()
 
 	// Read response body
 	body, err := io.ReadAll(res.Body)
