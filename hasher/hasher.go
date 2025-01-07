@@ -16,17 +16,17 @@ func HashDane(firstName, lastName, driverLicenseNumber string) string {
 	//fmt.Printf("Before normalization: '%s'\n", toHash)
 	toHash = normalizeInput(toHash)
 	cfg := config.GetConfig()
-	if !cfg.Debug {
+	if cfg.Debug {
 		fmt.Printf("[DEBUG] To hash: (before normalized) '%s'\n", toHash)
 	}
 	//hashing
 	normalized := NormalizeForHash(toHash)
-	if !cfg.Debug {
+	if cfg.Debug {
 		fmt.Printf("[DEBUG] To hash: (normalized) '%s'\n", normalized)
 	}
 	hash := md5.Sum([]byte(normalized))
 	formatedHash := strings.ToUpper(hex.EncodeToString(hash[:]))
-	if !cfg.Debug {
+	if cfg.Debug {
 		fmt.Printf("[DEBUG] Hash: '%s'\n", formatedHash)
 
 	}
